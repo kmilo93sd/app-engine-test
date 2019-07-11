@@ -1,0 +1,12 @@
+kind: pipeline
+name: app-engine-test
+
+steps:
+  - name: publish
+    image: plugins/gcr
+    settings:
+      repo: getcolors/app-engine-test
+      dockerfile: Dockerfile
+      tags: latest
+      json_key:
+        from_secret: google_credentials

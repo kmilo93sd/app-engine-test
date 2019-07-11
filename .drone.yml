@@ -10,3 +10,17 @@ steps:
       tags: latest
       json_key:
         from_secret: google_credentials
+
+  - name: deploy
+    image: google/cloud-sdk:alpine
+    environment:
+      google_credentials:
+        from_secret: google_credentials
+      instance_zone:
+        from_secret: instance_zone
+      instance_name:
+        from_secret: instance_name
+    commands:
+      - echo $google_credentials > /tmp/$CI_PIPELINE_ID.json
+      - gcloud auth activate-service-account --key-file /tmp/$CI_PIPELINE_ID.json
+      - gcloud compute instance update-container --zone $instance_zone $instance_name gcr.io/getcolors/app-engine-test:latest
